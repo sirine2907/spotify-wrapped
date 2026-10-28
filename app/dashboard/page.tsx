@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
 import Header from "@/components/header"
 import RangeTabs from "@/components/range-tabs"
+import RecentPlays from "@/components/recent-plays"
+import StatCards from "@/components/stat-cards"
 import TopArtists from "@/components/top-artists"
 import TopTracks from "@/components/top-tracks"
 import { Button } from "@/components/ui/button"
@@ -49,8 +51,12 @@ export default function DashboardPage() {
 
         {data && !loading && (
           <>
+            <StatCards data={data} />
             <TopArtists artists={data.topArtists} />
-            <TopTracks tracks={data.topTracks} />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <TopTracks tracks={data.topTracks} />
+              <RecentPlays recent={data.recent} />
+            </div>
           </>
         )}
       </main>
