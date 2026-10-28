@@ -47,7 +47,9 @@ export default function DashboardPage() {
     <>
       <Header>
         {demo && (
-          <span className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-foreground">Demo mode</span>
+          <span className="hidden rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-foreground sm:inline">
+            Demo mode
+          </span>
         )}
         <Button asChild variant="outline" size="sm">
           <Link href="/share">
@@ -55,7 +57,7 @@ export default function DashboardPage() {
           </Link>
         </Button>
         <Button variant="ghost" size="sm" onClick={handleLogout}>
-          <LogOut /> {demo ? "Exit demo" : "Log out"}
+          <LogOut /> <span className="hidden sm:inline">{demo ? "Exit demo" : "Log out"}</span>
         </Button>
       </Header>
 
