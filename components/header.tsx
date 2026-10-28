@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Disc3 } from "lucide-react"
+import ThemeToggle from "./theme-toggle"
 
 export default function Header({ children }: { children?: React.ReactNode }) {
   return (
@@ -11,7 +12,10 @@ export default function Header({ children }: { children?: React.ReactNode }) {
           <Disc3 className="size-6 text-primary" />
           Replay
         </Link>
-        <div className="flex items-center gap-2">{children}</div>
+        <div className="flex items-center gap-2">
+          {children}
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )

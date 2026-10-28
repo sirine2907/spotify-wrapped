@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Space_Grotesk } from "next/font/google"
+import { ThemeProvider } from "next-themes"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -12,8 +13,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${grotesk.variable} antialiased`}>{children}</body>
+    // suppressHydrationWarning because next-themes adds the "dark" class before react loads
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${grotesk.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
