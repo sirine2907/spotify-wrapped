@@ -25,6 +25,52 @@ export function getGenreCounts(artists: Artist[]) {
     .sort((a, b) => b.count - a.count)
 }
 
+// top 6 genres for the pie chart, everything else goes into "other"
+export function getGenreChartData(artists: Artist[]) {
+  const genres = getGenreCounts(artists)
+  const top = genres.slice(0, 6).map((g) => ({ name: g.genre, value: g.count }))
+
+  let otherCount = 0
+  genres.slice(6).forEach((g) => (otherCount += g.count))
+  if (otherCount > 0) {
+    top.push({ name: "other", value: otherCount })
+  }
+
+  return top
+}
+
+// how many songs you played in each hour of the day (0 = midnight)
+export function getListeningHours(recent: RecentPlay[]) {
+  const hours = []
+  for (let h = 0; h < 24; h++) {
+    hours.push({ hour: h, label: formatHour(h), plays: 0 })
+  }
+
+  for (const play of recent) {
+    // getHours() uses the user's own timezone, which is what we want
+    const h = new Date(play.played_at).getHours()
+    hours[h].plays++
+  }
+
+  return hours
+}
+
+export function getPeakHour(recent: RecentPlay[]) {
+  const hours = getListeningHours(recent)
+  let peak = hours[0]
+  for (const h of hours) {
+    if (h.plays > peak.plays) peak = h
+  }
+  return peak
+}
+
+// 0 -> "12am", 13 -> "1pm"
+export function formatHour(h: number) {
+  if (h === 0) return "12am"
+  if (h === 12) return "12pm"
+  return h < 12 ? h + "am" : h - 12 + "pm"
+}
+
 export function getTopGenre(artists: Artist[]) {
   const genres = getGenreCounts(artists)
   return genres.length > 0 ? genres[0].genre : "unknown"

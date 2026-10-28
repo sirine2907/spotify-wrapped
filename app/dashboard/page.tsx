@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
+import GenreChart from "@/components/genre-chart"
 import Header from "@/components/header"
+import HoursChart from "@/components/hours-chart"
 import RangeTabs from "@/components/range-tabs"
 import RecentPlays from "@/components/recent-plays"
 import StatCards from "@/components/stat-cards"
@@ -53,6 +55,10 @@ export default function DashboardPage() {
           <>
             <StatCards data={data} />
             <TopArtists artists={data.topArtists} />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <GenreChart artists={data.topArtists} />
+              <HoursChart recent={data.recent} />
+            </div>
             <div className="grid gap-6 lg:grid-cols-2">
               <TopTracks tracks={data.topTracks} />
               <RecentPlays recent={data.recent} />
