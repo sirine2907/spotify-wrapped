@@ -8,6 +8,7 @@ import ErrorState from "@/components/error-state"
 import GenreChart from "@/components/genre-chart"
 import Header from "@/components/header"
 import HoursChart from "@/components/hours-chart"
+import PersonalityCard from "@/components/personality-card"
 import RangeTabs from "@/components/range-tabs"
 import RecentPlays from "@/components/recent-plays"
 import StatCards from "@/components/stat-cards"
@@ -66,6 +67,7 @@ export default function DashboardPage() {
 
         {data && !loading && (
           <>
+            <PersonalityCard data={data} />
             <StatCards data={data} />
             <TopArtists artists={data.topArtists} />
             <div className="grid gap-6 lg:grid-cols-2">

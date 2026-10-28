@@ -76,6 +76,60 @@ export function getTopGenre(artists: Artist[]) {
   return genres.length > 0 ? genres[0].genre : "unknown"
 }
 
+export type Personality = {
+  name: string
+  description: string
+}
+
+// spotify removed audio features (energy, danceability...) for new apps,
+// so this is based on genres, popularity and how much you repeat your top artist
+export function getPersonality(artists: Artist[], tracks: Track[]): Personality {
+  const genreCount = getGenreCounts(artists).length
+
+  // average popularity of your top artists (0 - 100)
+  const withPopularity = artists.filter((a) => a.popularity !== undefined)
+  let popularitySum = 0
+  withPopularity.forEach((a) => (popularitySum += a.popularity || 0))
+  const avgPopularity = withPopularity.length > 0 ? popularitySum / withPopularity.length : 0
+
+  // how many of your top 20 songs are by your #1 artist
+  const topArtistId = artists[0]?.id
+  const topArtistSongs = tracks.slice(0, 20).filter((t) => t.artists.some((a) => a.id === topArtistId)).length
+
+  if (topArtistSongs >= 4) {
+    return {
+      name: "The Loyal Fan",
+      description: "When you like an artist, you really like them. Your #1 is all over your top songs.",
+    }
+  }
+
+  if (genreCount >= 20) {
+    return {
+      name: "The Explorer",
+      description: `You jumped between ${genreCount} different genres. Your taste doesn't stay in one place for long.`,
+    }
+  }
+
+  if (avgPopularity >= 70) {
+    return {
+      name: "The Hitmaker",
+      description: "You always know what's trending. Your favorites are the songs everyone else is playing too.",
+    }
+  }
+
+  if (avgPopularity > 0 && avgPopularity < 45) {
+    return {
+      name: "The Crate Digger",
+      description: "You find artists before they blow up. Most of your favorites are still under the radar.",
+    }
+  }
+
+  return {
+    name: "The Mood Mixer",
+    description: "A bit of everything depending on the day. Your playlists follow your mood, not the charts.",
+  }
+}
+
 // total minutes of the recently played songs (spotify only gives the last 50)
 export function getRecentMinutes(recent: RecentPlay[]) {
   let total = 0
