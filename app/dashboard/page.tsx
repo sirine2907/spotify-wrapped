@@ -12,6 +12,7 @@ import StatCards from "@/components/stat-cards"
 import TopArtists from "@/components/top-artists"
 import TopTracks from "@/components/top-tracks"
 import { Button } from "@/components/ui/button"
+import { isDemoMode, stopDemo } from "@/lib/demo-data"
 import { isLoggedIn, logout } from "@/lib/spotify"
 import { useSpotifyData } from "@/lib/use-spotify-data"
 import type { TimeRange } from "@/lib/types"
@@ -21,21 +22,31 @@ export default function DashboardPage() {
   const [range, setRange] = useState<TimeRange>("medium_term")
   const { data, loading, error } = useSpotifyData(range)
 
-  // no token = send them back to the landing page
+  const [demo, setDemo] = useState(false)
+
+  // no token and not in demo = send them back to the landing page
   useEffect(() => {
-    if (!isLoggedIn()) router.replace("/")
+    if (isDemoMode()) {
+      setDemo(true)
+    } else if (!isLoggedIn()) {
+      router.replace("/")
+    }
   }, [router])
 
   function handleLogout() {
     logout()
+    stopDemo()
     router.push("/")
   }
 
   return (
     <>
       <Header>
+        {demo && (
+          <span className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-foreground">Demo mode</span>
+        )}
         <Button variant="ghost" size="sm" onClick={handleLogout}>
-          <LogOut /> Log out
+          <LogOut /> {demo ? "Exit demo" : "Log out"}
         </Button>
       </Header>
 

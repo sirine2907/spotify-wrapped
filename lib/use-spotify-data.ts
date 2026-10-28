@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { getDemoData, isDemoMode } from "./demo-data"
 import { getProfile, getRecentlyPlayed, getTopArtists, getTopTracks } from "./spotify"
 import type { ReplayData, TimeRange } from "./types"
 
@@ -16,6 +17,16 @@ export function useSpotifyData(range: TimeRange) {
     async function load() {
       setLoading(true)
       setError("")
+
+      // demo mode: fake a little delay so it feels like a real request
+      if (isDemoMode()) {
+        await new Promise((resolve) => setTimeout(resolve, 500))
+        if (!cancelled) {
+          setData(getDemoData(range))
+          setLoading(false)
+        }
+        return
+      }
 
       try {
         const [profile, topArtists, topTracks, recent] = await Promise.all([

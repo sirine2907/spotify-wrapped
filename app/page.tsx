@@ -1,8 +1,10 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { BarChart3, Music2, PieChart, Share2, Sparkles } from "lucide-react"
 import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
+import { startDemo } from "@/lib/demo-data"
 import { login } from "@/lib/spotify"
 
 const features = [
@@ -29,6 +31,13 @@ const features = [
 ]
 
 export default function Home() {
+  const router = useRouter()
+
+  function tryDemo() {
+    startDemo()
+    router.push("/dashboard")
+  }
+
   return (
     <>
       <Header />
@@ -51,6 +60,9 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" onClick={login}>
                 Log in with Spotify
+              </Button>
+              <Button size="lg" variant="outline" onClick={tryDemo}>
+                Try demo
               </Button>
             </div>
           </div>
