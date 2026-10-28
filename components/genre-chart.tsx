@@ -9,13 +9,12 @@ export const CHART_COLORS = ["#ff4f7b", "#ffb020", "#8cc700", "#7b2ff7", "#0ea5a
 
 export default function GenreChart({ artists }: { artists: Artist[] }) {
   const data = getGenreChartData(artists)
-  let total = 0
-  data.forEach((d) => (total += d.value))
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Genre breakdown</CardTitle>
+        <span className="text-xs text-muted-foreground">from your top {artists.length} artists</span>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
@@ -62,7 +61,9 @@ export default function GenreChart({ artists }: { artists: Artist[] }) {
                     style={{ background: CHART_COLORS[index % CHART_COLORS.length] }}
                   />
                   <span className="flex-1 truncate capitalize">{entry.name}</span>
-                  <span className="tabular-nums text-muted-foreground">{Math.round((entry.value / total) * 100)}%</span>
+                  <span className="tabular-nums text-muted-foreground">
+                    {entry.value} {entry.value === 1 ? "artist" : "artists"}
+                  </span>
                 </li>
               ))}
             </ul>

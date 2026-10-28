@@ -25,18 +25,13 @@ export function getGenreCounts(artists: Artist[]) {
     .sort((a, b) => b.count - a.count)
 }
 
-// top 6 genres for the pie chart, everything else goes into "other"
+// top 7 genres for the pie chart.
+// I tried adding an "other" slice but most people have tons of small genres
+// so "other" ended up being half the chart, which wasn't very useful
 export function getGenreChartData(artists: Artist[]) {
-  const genres = getGenreCounts(artists)
-  const top = genres.slice(0, 6).map((g) => ({ name: g.genre, value: g.count }))
-
-  let otherCount = 0
-  genres.slice(6).forEach((g) => (otherCount += g.count))
-  if (otherCount > 0) {
-    top.push({ name: "other", value: otherCount })
-  }
-
-  return top
+  return getGenreCounts(artists)
+    .slice(0, 7)
+    .map((g) => ({ name: g.genre, value: g.count }))
 }
 
 // how many songs you played in each hour of the day (0 = midnight)

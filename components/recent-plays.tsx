@@ -21,9 +21,9 @@ export default function RecentPlays({ recent }: { recent: RecentPlay[] }) {
       <CardContent className="pt-3">
         {recent.length === 0 && <p className="text-sm text-muted-foreground">Nothing played recently.</p>}
 
-        <ul className="max-h-[420px] overflow-y-auto pr-1">
-          {recent.slice(0, 20).map((play) => (
-            <li key={play.played_at} className="flex items-center gap-3 px-2 py-2">
+        <ul>
+          {recent.slice(0, 10).map((play) => (
+            <li key={play.played_at} className="flex items-center gap-3 px-2 py-2.5">
               <Cover
                 src={play.track.album.images[2]?.url || play.track.album.images[0]?.url}
                 name={play.track.name}
