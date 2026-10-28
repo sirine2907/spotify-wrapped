@@ -1,5 +1,7 @@
 // all the spotify stuff lives here: login (pkce), tokens and api calls
 
+import type { Artist, Profile, RecentPlay, TimeRange, Track } from "./types"
+
 const CLIENT_ID = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID || ""
 const SCOPES = "user-top-read user-read-recently-played user-read-private"
 
@@ -141,4 +143,43 @@ export async function getToken() {
   }
 
   return localStorage.getItem("access_token")
+}
+
+// ---------- api calls ----------
+
+async function spotifyFetch(path: string) {
+  const token = await getToken()
+  if (!token) {
+    throw new Error("expired")
+  }
+
+  const res = await fetch("https://api.spotify.com/v1" + path, {
+    headers: { Authorization: "Bearer " + token },
+  })
+
+  if (res.status === 401) throw new Error("expired")
+  if (res.status === 429) throw new Error("rate_limited")
+  if (!res.ok) throw new Error("Spotify request failed (" + res.status + ")")
+
+  return res.json()
+}
+
+export async function getProfile(): Promise<Profile> {
+  return spotifyFetch("/me")
+}
+
+// I grab 50 so the genre stats have more to work with, the UI only shows the top 10
+export async function getTopArtists(range: TimeRange): Promise<Artist[]> {
+  const data = await spotifyFetch(`/me/top/artists?time_range=${range}&limit=50`)
+  return data.items
+}
+
+export async function getTopTracks(range: TimeRange): Promise<Track[]> {
+  const data = await spotifyFetch(`/me/top/tracks?time_range=${range}&limit=50`)
+  return data.items
+}
+
+export async function getRecentlyPlayed(): Promise<RecentPlay[]> {
+  const data = await spotifyFetch("/me/player/recently-played?limit=50")
+  return data.items
 }
