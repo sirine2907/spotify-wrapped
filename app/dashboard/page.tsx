@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { LogOut } from "lucide-react"
+import DashboardSkeleton from "@/components/dashboard-skeleton"
+import ErrorState from "@/components/error-state"
 import GenreChart from "@/components/genre-chart"
 import Header from "@/components/header"
 import HoursChart from "@/components/hours-chart"
@@ -59,8 +61,8 @@ export default function DashboardPage() {
           <RangeTabs value={range} onChange={setRange} />
         </div>
 
-        {loading && <p className="text-muted-foreground">Loading your stats...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {loading && <DashboardSkeleton />}
+        {error && !loading && <ErrorState error={error} />}
 
         {data && !loading && (
           <>
