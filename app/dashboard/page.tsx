@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { LogOut } from "lucide-react"
+import Link from "next/link"
+import { LogOut, Share2 } from "lucide-react"
 import DashboardSkeleton from "@/components/dashboard-skeleton"
 import ErrorState from "@/components/error-state"
 import GenreChart from "@/components/genre-chart"
@@ -48,6 +49,11 @@ export default function DashboardPage() {
         {demo && (
           <span className="rounded-full bg-accent/20 px-3 py-1 text-xs font-semibold text-foreground">Demo mode</span>
         )}
+        <Button asChild variant="outline" size="sm">
+          <Link href="/share">
+            <Share2 /> <span className="hidden sm:inline">Share card</span>
+          </Link>
+        </Button>
         <Button variant="ghost" size="sm" onClick={handleLogout}>
           <LogOut /> {demo ? "Exit demo" : "Log out"}
         </Button>
